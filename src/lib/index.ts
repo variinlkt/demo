@@ -1,4 +1,5 @@
 export function encode<T>(data: T): Uint16Array {
+  //JSON.stringify无法转换blob
   const str = JSON.stringify(data);
   const buf = new ArrayBuffer(str.length * 2);
   const bufView = new Uint16Array(buf);

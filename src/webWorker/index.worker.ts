@@ -5,28 +5,28 @@ const worker = register();
 worker.on('UPLOAD', dataHandler);
 
 async function dataHandler(data: data){
-  console.log(data)
-  return 'ok'
   // todo: concurrency control
   // todo: fetch
-  // try{ 
-  //   const { chunks, token } = data
-  //   // todo: request error
-  //   await Promise.all(chunks.map((chunk: Blob, i: number) => req({chunk, i, token})))
-  //   await req({
-  //       type: 'merge',
-  //       token,
-  //       chunksCnt: chunks.length
-  //     });
-  //   return {
-  //     status: 'ok'
-  //   }
-  // } catch {// todo: error code
-  //   return {
-  //     status: 'error',
-  //     errCode: -1
-  //   }
-  // }
+  try{ 
+    const { chunks, token } = data
+    // todo: request error
+    console.log(chunks)
+    await Promise.all(chunks.map((chunk: Blob, i: number) => req({chunk, i, token})))
+    await req({
+        type: 'merge',
+        token,
+        chunksCnt: chunks.length
+      });
+    return {
+      status: 'ok'
+    }
+  } catch (err) {// todo: error code
+    console.log(err)
+    return {
+      status: 'error',
+      errCode: -1
+    }
+  }
   
 }
 
@@ -42,7 +42,7 @@ function req(params: params){
     fd.append('index', i + '');
   }
   fd.append('token', token);
-  return fetch('', {// todo: server
+  return fetch('http://localhost:3008/api/upload', {// todo: server
     method: 'POST',
     body: fd
   });

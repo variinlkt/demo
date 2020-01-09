@@ -12,11 +12,13 @@ export function register(): WorkerInstance {
       self.postMessage(data.buffer, [data.buffer]);
     };
     self.onmessage = async (e: MessageEvent) => {
-      const { data } = e;
+      let { data } = e;
       if (!data) return;
+      if (Object.prototype.toString.call(data) === '[object ArrayBuffer]'){
+        data = decode(data);
+      }
   
-      const { type, id, msg } = decode(data);
-  
+      const { type, id, msg } = data;
       const result = (await mapping[type](msg)) || "done";
       post({ id, type, msg: result });
     };

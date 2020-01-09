@@ -7,6 +7,7 @@ export default class FileLoader{
   private end: number = 0;
   private chunks: Blob[] = [];
   private chunkSize: number;
+  private token: string = Math.random() + '';
   constructor(file: File, chunkSize = 1*1024*1024){
     this.file = file;
     this.chunkSize = chunkSize;
@@ -40,7 +41,12 @@ export default class FileLoader{
     const w = new Worker();
     const worker = new PromiseWorker(w);
     // todo
-    worker.emit('UPLOAD', 88).then(res => console.log(res));
+    console.log(this.chunks)
+    worker.emit('UPLOAD', {
+      chunks: this.chunks,
+      token: this.token
+    })
+    .then(res => console.log(res));
   }
 
   download(){

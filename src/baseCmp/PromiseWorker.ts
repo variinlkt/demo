@@ -25,16 +25,15 @@ export default class PromiseWorker {
   }
   emit<T, U>(type: string, msg: T): Promise<U> {
     return new Promise(resolve => {
-      const encodedData = encode({
-        id: this.id,
-        type,
-        msg
-      });
       this.msgHandlerBank.set(this.id, {
         type,
         callback: (x: U) => resolve(x)
       });
-      this.worker.postMessage(encodedData.buffer, [encodedData.buffer]);
+      this.worker.postMessage({ 
+        type,
+        id: this.id,
+        msg 
+      });
     });
   }
   terminate() {
