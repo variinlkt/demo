@@ -8,18 +8,20 @@ function App() {
     const file = fileRef.current.files[0];
     const fl = new FileLoader(file)
     fl.upload()
+
+    
     e.preventDefault();
   }
   return (
     <div>
-      <form onSubmit={handleSubmit}>
+      {/* <form onSubmit={handleSubmit}>
         <label>
-          Upload file:
-          <input type="file" ref={fileRef} />
-        </label>
+          Upload file: */}
+          <input type="file" ref={fileRef} onChange={handleSubmit}/>
+        {/* </label>
         <br />
         <button type="submit">Submit</button>
-      </form>
+      </form> */}
     </div>
   );
 }

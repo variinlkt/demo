@@ -9,14 +9,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@koa/cors": "^3.0.0",
     "koa": "^2.11.0",
     "koa-body": "^4.1.1",
     "koa-controllers": "^0.1.6",
     "koa-json": "^2.0.2",
     "koa-logger": "^3.2.1",
     "koa-router": "^7.4.0",
-    "koa-static": "^5.0.0"
+    "koa-static": "^5.0.0",
+    "koa2-cors": "^2.0.6"
   },
   "devDependencies": {
     "@babel/core": "^7.7.7",

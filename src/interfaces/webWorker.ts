@@ -16,4 +16,5 @@ export interface params {
 export interface data {
   chunks: Blob[];
   token: string;
+  fileName: string;
 }

@@ -44,7 +44,8 @@ export default class FileLoader{
     console.log(this.chunks)
     worker.emit('UPLOAD', {
       chunks: this.chunks,
-      token: this.token
+      token: this.token,
+      fileName: this.file.name
     })
     .then(res => console.log(res));
   }
