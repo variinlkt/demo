@@ -36,9 +36,10 @@ export function concurrency(jobList: any[], limit = 4, handler: Function){
     const job = arr.shift();
     return handler(job).then((res: any) => {
       const { success, index, token } = res;
-      if(!success) {// fail to upload a chunk, retry
-        arr.push(job);
-      }
+      console.log('res',res)
+      // if(!success) {// 上传文件块失败，重传
+      //   arr.push(job);
+      // }
       if(arr.length) 
         return fn(arr);
       else 
@@ -50,6 +51,7 @@ export function concurrency(jobList: any[], limit = 4, handler: Function){
   while(limit-- && copy.length){
     currentList.push(fn(copy));
   }
+  // 设置超时时间
   return Promise.race([Promise.all([...currentList]), timeoutFn(60000)]);
 }
 

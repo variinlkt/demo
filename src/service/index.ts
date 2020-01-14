@@ -10,8 +10,18 @@ export async function uploadFile(
     headers: {
       'Content-Type': 'multipart/form-data'
     },
-    timeout: 3000,
+    timeout: 30000,
     onUploadProgress
+  });
+  const { data } = ret;
+  return data;
+}
+
+export async function mergeFile(params: FormData | IUploadFileDataParams) {
+  const ret = await axios.post('http://localhost:3008/api/merge', params, {
+    headers: {
+      'Content-Type': 'application/json'
+    },
   });
   const { data } = ret;
   return data;

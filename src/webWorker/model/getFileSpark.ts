@@ -17,7 +17,7 @@ export default function getFileSpark(fileList: Blob[]){
             hash: spark.end()
           });
         } else {
-          return loadNext(count);
+          return loadNext(cnt);
         }
       }
     };

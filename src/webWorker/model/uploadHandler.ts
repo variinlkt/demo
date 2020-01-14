@@ -1,7 +1,7 @@
 import { concurrency } from "../lib";
 import { IUploadFileDataParams, IProgressEventParams } from "../../interfaces/request";
 import { data } from "../../interfaces/webWorker";
-import { uploadFile } from "../../service";
+import { uploadFile, mergeFile } from "../../service";
 
 
 export default async function uploadHandler(data: data){
@@ -26,9 +26,10 @@ export default async function uploadHandler(data: data){
         console.log(`${item.i}:${Math.round( (progressEvent.loaded * 100) / progressEvent.total )}`)
       },)
     );
+    console.log(r)
     // 文件块都成功上传， 通知服务端进行合并
     if (Array.isArray(r)) {
-      const ret = await uploadFile(formatFormData({
+      const ret = await mergeFile(formatFormData({
         type: 'merge',
         token,
         chunksCnt: chunks.length,
@@ -49,16 +50,14 @@ export default async function uploadHandler(data: data){
 
 function formatFormData(params: IUploadFileDataParams){
   let fd = new FormData();
-  const { chunk, i, type, fileName, token, chunksCnt } = params;
+  const { chunk, i, type, token } = params;
 
   if (type === 'merge') {
-    fd.append('type', type);
-    fd.append('fileName', fileName || token);
-    fd.append('chunkCnt', chunksCnt + '')
+    return params;
   } else {
     fd.append('data', chunk!);
     fd.append('index', i + '');
+    fd.append('token', token);
+    return fd;
   }
-  fd.append('token', token);
-  return fd;
 }

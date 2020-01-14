@@ -21,6 +21,7 @@ export default class FileLoader{
 
   async getFileSpark(worker: PromiseWorker) {
     const hashObj: ISparkHashResp = await worker.emit('SPARK', this.chunks);
+    console.log(hashObj)
     const { success, hash } = hashObj;
     if(success){
       this.token = hash;

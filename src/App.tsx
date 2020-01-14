@@ -6,6 +6,8 @@ function App() {
   const fileRef: any = useRef(null)
   const handleSubmit = (e: any) => {
     const file = fileRef.current.files[0];
+    if(!file)
+      return;
     const fl = new FileLoader(file)
     fl.upload()
 
