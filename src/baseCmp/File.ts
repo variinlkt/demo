@@ -1,6 +1,7 @@
 /* eslint-disable */
 import Worker from 'worker-loader!../webWorker/index.worker';
 import PromiseWorker from "./PromiseWorker";
+import { ISparkHashResp } from '../interfaces/response';
 export default class FileLoader{
   private file: File;
   private start: number = 0;
@@ -14,9 +15,18 @@ export default class FileLoader{
 
     if(file){
       this.splitChunks()
-      console.log(this.chunks)
+      console.log(this.chunks);
     }
   }
+
+  async getFileSpark(worker: PromiseWorker) {
+    const hashObj: ISparkHashResp = await worker.emit('SPARK', this.chunks);
+    const { success, hash } = hashObj;
+    if(success){
+      this.token = hash;
+    }
+  }
+
   splitChunks(){
     if (this.file.size <= this.chunkSize) {
       this.chunks.push(this.file.slice(0));
@@ -37,17 +47,21 @@ export default class FileLoader{
     }
   }
 
-  upload(){
-    const w = new Worker();
-    const worker = new PromiseWorker(w);
-    // todo
-    console.log(this.chunks)
-    worker.emit('UPLOAD', {
-      chunks: this.chunks,
-      token: this.token,
-      fileName: this.file.name
-    })
-    .then(res => console.log(res));
+  async upload(){
+    try{
+      const w = new Worker();
+      const worker = new PromiseWorker(w);
+      // 计算文件hash
+      await this.getFileSpark(worker);
+      const uploadRet = worker.emit('UPLOAD', {
+        chunks: this.chunks,
+        token: this.token,
+        fileName: this.file.name
+      })
+      console.log(uploadRet)
+    } catch(err){
+      console.error(err)
+    }
   }
 
   download(){

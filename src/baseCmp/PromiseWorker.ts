@@ -8,6 +8,7 @@ export default class PromiseWorker {
   }> = new Map();
   private id: string = Math.random() + '';
   private worker: Worker;
+
   constructor(worker: Worker) {
     this.worker = worker;
     this.worker.onmessage = (e: MessageEvent) => {
@@ -23,6 +24,7 @@ export default class PromiseWorker {
       }
     }
   }
+
   emit<T, U>(type: string, msg: T): Promise<U> {
     return new Promise(resolve => {
       this.msgHandlerBank.set(this.id, {
@@ -36,6 +38,7 @@ export default class PromiseWorker {
       });
     });
   }
+  
   terminate() {
     this.worker.terminate();
   }

@@ -13,20 +13,11 @@ const app = new Koa();
 const router = new Router();
 
 app.use(cors);
-// app.use(koaBody({
-//   multipart: true,
-//   formidable: {
-//     maxFileSize: 500*1024*1024    // 设置上传文件大小最大限制，默认2M
-//   }
-// }));
 app.use(json());
 app.use(logger());
 
 app.use(statics(path.join(__dirname, './upload/')));
 
-app.use(async (ctx, next) => {
-  await next()
-})
 router.use('/api', api.routes())
 
 app.use(router.routes())
