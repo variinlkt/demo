@@ -1,5 +1,13 @@
 import Router from 'koa-router'
-import { uploadFile, getUploadedChunks, mergeFile } from '../model'
+import { 
+  uploadFile, 
+  getUploadedChunks,
+  mergeFile,
+  handleSignin,
+  handleSignup,
+  getList,
+  addSong
+ } from '../model'
 import koaBody from 'koa-body';
 
 const router = new Router();
@@ -20,5 +28,16 @@ router.post('/merge', koaBody(), mergeFile.bind(this, {chunksPath, idx}));
 // todo：获取已上传文件分块
 router.get('/uploadedChunks', getUploadedChunks);
 
+// todo: sign in
+router.post('/signin', koaBody(), handleSignin);
+
+// todo: sign up
+router.post('/signup', koaBody(), handleSignup);
+
+// 获取列表
+router.get('/list', getList);
+
+// 添加
+router.post('/addSong', koaBody(), addSong);
 
 export default router;

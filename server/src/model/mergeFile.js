@@ -34,17 +34,18 @@ function merge({writeStream, chunksPath, idx, chunksCnt}, resolve, reject){
       if (err) {
         reject(err)
       }
+      readStream.unpipe(writeStream);
       if(idx < chunksCnt - 1){
         chunksPath.delete(idx);
         return merge({writeStream, chunksPath, idx: ++idx, chunksCnt}, resolve, reject);
       } else {
-        idx = 0;
         resolve();
       }
     });
   });
   readStream.on('error', (err) => {
-    reject(err)
+    readStream.unpipe(writeStream);
+    reject(err);
   });
 }
 

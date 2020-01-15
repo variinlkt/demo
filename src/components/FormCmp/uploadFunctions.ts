@@ -3,8 +3,6 @@ import FileLoader from '../../baseCmp/File';
 import Worker from 'worker-loader!../../webWorker/index.worker';
 import PromiseWorker from "../../baseCmp/PromiseWorker";
 
-const w = new Worker();
-const worker = new PromiseWorker(w);
 
 function uploadImage({
   onProgress,
@@ -18,13 +16,16 @@ function uploadImage({
 } : any) {
   if(!file)
     return;
+  const w = new Worker();
+  const worker = new PromiseWorker(w);
   const fl = new FileLoader(file);
   fl.upload(worker, (percent: number) => onProgress({ percent }))
   .then(({success}) => {
     if(success){
-      onSuccess()
+      worker.terminate();
+      onSuccess();
     } else {
-      onError()
+      onError();
     }
   });
 }

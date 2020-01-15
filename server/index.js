@@ -1,6 +1,5 @@
 import Koa from 'koa';
 import Router from 'koa-router';
-import koaBody from 'koa-body';
 import logger from 'koa-logger';
 import json from 'koa-json';
 import statics from 'koa-static';

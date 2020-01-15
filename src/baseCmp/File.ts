@@ -51,6 +51,7 @@ export default class FileLoader{
 
   async upload(worker: PromiseWorker, onProgress?: Function){
     try{
+      console.log(worker)
       // 计算文件hash
       await this.getFileSpark(worker);
       const uploadRet = await worker.emit('UPLOAD', {
