@@ -10,7 +10,7 @@ export async function uploadFile(
     headers: {
       'Content-Type': 'multipart/form-data'
     },
-    timeout: 30000,
+    timeout: 60000,
     onUploadProgress
   });
   const { data } = ret;

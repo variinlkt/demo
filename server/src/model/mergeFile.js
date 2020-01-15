@@ -1,7 +1,7 @@
 import path from 'path';
 import fs from 'fs-extra';
 
-const uploadPath = path.join(__dirname, '../../upload/images');
+export const uploadPath = path.join(__dirname, '../../upload/');
 
 export default async function mergeFile(args, ctx) {
   let { chunksPath, idx } = args;
@@ -9,10 +9,7 @@ export default async function mergeFile(args, ctx) {
   const { token, type, fileName, chunksCnt } = data;
   if (type === 'merge'){ // 收到合并请求
     try{
-      const writeFilePath = `${uploadPath}/${token}${fileName.match(/\.\w+/)[0]}`;
-      const writeStream = fs.createWriteStream(writeFilePath);
-      await new Promise((resolve, reject) => merge({writeStream, chunksPath, idx, chunksCnt}, resolve, reject));
-      idx = 0;
+      mergeHandler({uploadPath, token, fileName, chunksPath, idx, chunksCnt})
       return ctx.body = {
         success: true,
         type,
@@ -41,6 +38,7 @@ function merge({writeStream, chunksPath, idx, chunksCnt}, resolve, reject){
         chunksPath.delete(idx);
         return merge({writeStream, chunksPath, idx: ++idx, chunksCnt}, resolve, reject);
       } else {
+        idx = 0;
         resolve();
       }
     });
@@ -48,4 +46,11 @@ function merge({writeStream, chunksPath, idx, chunksCnt}, resolve, reject){
   readStream.on('error', (err) => {
     reject(err)
   });
+}
+
+export async function mergeHandler({uploadPath, token, fileName, chunksPath, idx, chunksCnt}) {
+  await fs.ensureDir(uploadPath);
+  const writeFilePath = `${uploadPath}/${token}${fileName.match(/\.\w+/)[0]}`;
+  const writeStream = fs.createWriteStream(writeFilePath);
+  await new Promise((resolve, reject) => merge({writeStream, chunksPath, idx, chunksCnt}, resolve, reject));
 }

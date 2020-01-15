@@ -1,0 +1,21 @@
+@mixin flex {
+  display: flex;
+  width: 100%;
+}
+
+.form-page{
+  .info-area,
+  .upload-area{
+    @include flex
+  }
+
+  .info-area{
+    margin: 20px 0;
+    span,
+    a{
+      display: inline-block;
+      flex-shrink: 0;
+      margin: 0 20px;
+    }
+  }
+}

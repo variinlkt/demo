@@ -1,11 +1,21 @@
 /* config-overrides.js */
-const { override } = require("customize-cra")
+const { override, fixBabelImports } = require("customize-cra")
 const webpackConfig = require('./webpack.config')
 const addWebpackModules = () => (config, env) => {
-  console.log(config.module.rules.find(item => item.hasOwnProperty('oneOf')).oneOf)
-  config.module.rules.find(item => item.hasOwnProperty('oneOf')).oneOf.push(webpackConfig)
+  config = { ...config, ...webpackConfig }
+  console.log(config.resolve)
+
   return config
 }
+// module.exports = override(
+//   addWebpackModules()
+// )
+
 module.exports = override(
-  addWebpackModules()
-)
+  fixBabelImports('import', {
+    libraryName: 'antd',
+    libraryDirectory: 'es',
+    style: 'css',
+  })
+  // addWebpackModules()
+);

@@ -5,13 +5,14 @@ type WorkerInstance = {
   on(type: string, handler: Function): void;
 };
 
+export const post = (message: messageData): void => {
+  const data = encode(message);
+  // @ts-ignore
+  self.postMessage(data.buffer, [data.buffer]);
+};
+
 export function register(): WorkerInstance {
-  const mapping: Record<string, Function> = {};
-  const post = (message: messageData): void => {
-    const data = encode(message);
-    // @ts-ignore
-    self.postMessage(data.buffer, [data.buffer]);
-  };
+  const mapping: Map<string, Function> = new Map();
   self.onmessage = async (e: MessageEvent) => {
     let { data } = e;
     if (!data) return;
@@ -20,13 +21,15 @@ export function register(): WorkerInstance {
     }
 
     const { type, id, msg } = data;
-    const result = (await mapping[type](msg));
+    console.log(data, mapping)
+    const result = (await mapping.get(type)!({...msg, type, id}));
+    console.log('ready to post back')
     post({ id, type, msg: result });
   };
 
   return {
     on: (type, handler) => {
-      mapping[type] = handler;
+      mapping.set(type, handler);
     }
   };
 }
@@ -35,8 +38,8 @@ export function concurrency(jobList: any[], limit = 4, handler: Function){
   const fn = (arr: any[]) => {
     const job = arr.shift();
     return handler(job).then((res: any) => {
-      const { success, index, token } = res;
-      console.log('res',res)
+      // const { success, index, token } = res;
+      // console.log(success)
       // if(!success) {// 上传文件块失败，重传
       //   arr.push(job);
       // }

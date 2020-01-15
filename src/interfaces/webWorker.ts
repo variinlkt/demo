@@ -8,4 +8,6 @@ export interface data {
   chunks: Blob[];
   token: string;
   fileName: string;
+  type: string;
+  id: string;
 }

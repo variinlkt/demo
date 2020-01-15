@@ -1,6 +1,11 @@
 import SparkMD5 from 'spark-md5';
 
-export default function getFileSpark(fileList: Blob[]){
+interface IFileList {
+  fileList: Blob[]
+}
+
+export default function getFileSpark({ fileList }: IFileList){ 
+  console.log(fileList)
   return new Promise((resolve) => {
     const reader = new FileReader();
     let count = 0;
