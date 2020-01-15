@@ -7,7 +7,7 @@ export default class FileLoader{
   private chunks: Blob[] = [];
   private chunkSize: number;
   private token: string = Math.random() + '';
-  private progress: number = 0;
+  private percent: number = 0;
   constructor(file: File, chunkSize = 1*1024*1024){
     this.file = file;
     this.chunkSize = chunkSize;
@@ -49,21 +49,23 @@ export default class FileLoader{
     }
   }
 
-  async upload(worker: PromiseWorker){
+  async upload(worker: PromiseWorker, onProgress?: Function){
     try{
       // 计算文件hash
       await this.getFileSpark(worker);
-      const uploadRet = worker.emit('UPLOAD', {
+      const uploadRet = await worker.emit('UPLOAD', {
         chunks: this.chunks,
         token: this.token,
         fileName: this.file.name
-      }, ({progress}: any) => {
-        console.log(progress)
-        this.progress = progress;
-      }).then((res) => console.log(res))
-      console.log(uploadRet)
+      }, ({percent}: any) => {
+        this.percent = percent;
+        onProgress && onProgress(percent);
+      });
+      return uploadRet;
     } catch(err){
-      console.error(err)
+      console.error(err);
+      return err;
+
     }
   }
 

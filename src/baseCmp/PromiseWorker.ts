@@ -20,7 +20,7 @@ export default class PromiseWorker {
           handler = ret![id];
       console.log(msgData,ret,handler)
       if (handler && typeof handler === 'function') {
-        if (type !== 'PROGRESS' || (type === 'PROGRESS' && msg && msg.progress === 1)){
+        if (type !== 'PROGRESS' || (type === 'PROGRESS' && msg && msg.percent === 1)){
           handler(msg);
           this.msgHandlerBank.delete(id);
         } else { // progress

@@ -28,7 +28,7 @@ export default async function uploadHandler(data: data){
             id, 
             type: 'PROGRESS', 
             msg: {
-              progress: Math.round( (progressEvent.loaded * 100) / progressEvent.total ) / 100
+              percent: Math.round( (progressEvent.loaded * 100) / progressEvent.total )
             } 
           })
         }
@@ -47,7 +47,7 @@ export default async function uploadHandler(data: data){
       console.log(ret)
       return ret
     } else {
-      return r;
+      return Array.isArray(r) && r[0] || r;
     }
   } catch (err) {// todo: error code
     console.error(err)

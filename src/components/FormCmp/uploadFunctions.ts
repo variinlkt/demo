@@ -7,9 +7,9 @@ const w = new Worker();
 const worker = new PromiseWorker(w);
 
 function uploadImage({
-  // onProgress,
-  // onError,
-  // onSuccess,
+  onProgress,
+  onError,
+  onSuccess,
   // data,
   // filename,
   file,
@@ -19,7 +19,14 @@ function uploadImage({
   if(!file)
     return;
   const fl = new FileLoader(file);
-  fl.upload(worker);
+  fl.upload(worker, (percent: number) => onProgress({ percent }))
+  .then(({success}) => {
+    if(success){
+      onSuccess()
+    } else {
+      onError()
+    }
+  });
 }
 
 function uploadFiles() {

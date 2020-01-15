@@ -12,33 +12,12 @@ const { SubMenu } = Menu;
 
 
 const App: React.FC<any> = (props) => {
-  // const fileRef: any = useRef(null)
-  // const handleSubmit = (e: any) => {
-  //   const file = fileRef.current.files[0];
-  //   if(!file)
-  //     return;
-  //   const fl = new FileLoader(file)
-  //   fl.upload()
-
-    
-  //   e.preventDefault();
-  // }
   const MenuStyle: CSSProperties = {
     width: 256,
     height: '100%',
     position: 'absolute'
   };
   return (
-    // <div>
-    //   {/* <form onSubmit={handleSubmit}>
-    //     <label>
-    //       Upload file: */}
-    //       <input type="file" ref={fileRef} onChange={handleSubmit}/>
-    //     {/* </label>
-    //     <br />
-    //     <button type="submit">Submit</button>
-    //   </form> */}
-    // </div>
     <>
       <Menu
         style={MenuStyle}
@@ -50,10 +29,10 @@ const App: React.FC<any> = (props) => {
             <SubMenu
               key={key}
               title={
-                <span>
+                <Link to={`/${key === 'list' ? '' : key}`}>
                   <Icon type="mail" />
-                  <Link to={`/${key === 'list' ? '' : key}`}>{title}</Link>
-                </span>
+                  {title}
+                </Link>
               }
             >
             </SubMenu>

@@ -37,7 +37,7 @@ const FormCmp: React.FC<IFormPageProps> = ({
       key: 'img',
       label: '上传封面图',
       extra: '支持jpg | png格式',
-      accept: '.jpg,.png',
+      accept: '.jpg,.png,.pdf',
       action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
       customRequest: uploadImage
     },
