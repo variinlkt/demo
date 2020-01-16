@@ -1,9 +1,9 @@
 import React from 'react';
-import { Typography, Divider, Form, Upload, Button, Icon } from 'antd';
+import { Typography, Divider, Button } from 'antd';
 import { Link } from 'react-router-dom';
 import './index.scss';
 
-const { Title, Paragraph, Text } = Typography;
+const { Title } = Typography;
 
 interface ITitleProps {
   title: string;

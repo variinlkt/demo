@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Table, Avatar, Tag } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Table, Avatar } from 'antd';
 import TitleCmp from '../../components/TitleCmp/index';
+import { getList } from 'src/service';
 import './index.scss';
 
 
-const { Column, ColumnGroup } = Table;
+const { Column } = Table;
 interface IListPageProps {
   avatar: string;
   userName: string;
@@ -17,49 +17,59 @@ interface IItemProps{
   value: string
 }
 
-const ListPage: React.FC<IListPageProps> = ({
-  avatar,
-  userName,
-  controlList
-}) => {
-  const [title, setTitle] = useState('歌库');
+const tableHead = [
+  {
+    key: 'img',
+    title: '',
+    dataIndex: 'img',
+    render: (img: string) => (
+      <Avatar shape="square" size={64} src={img} />
+    ),
+    width: 100
+  },
+  {
+    key: 'song',
+    title: '歌名',
+    dataIndex: 'song'
+  },
+  {
+    key: 'singer',
+    title: '歌手',
+    dataIndex: 'singer'
+  },
+  {
+    key: 'action',
+    title: '操作',
+    dataIndex: 'action',
+    render: () => <a href="javascript:void(0);">删除</a>
+  },
+];
+
+const ListPage: React.FC<IListPageProps> = () => {
+  const title = '歌库';//redux
   const [data, setData] = useState(
     [
       {
-        key: '1',
-        albumImage: 'https://avatars3.githubusercontent.com/u/7843281?s=40&v=4',
+        id: '1',
+        img: 'https://avatars3.githubusercontent.com/u/7843281?s=40&v=4',
         song: 'Brown',
         singer: '32',
       },
     ]
-  )
-  const [tableHead, setTableHead] = useState([
-    {
-      key: 'albumImage',
-      title: '',
-      dataIndex: 'albumImage',
-      render: (albumImage: string) => (
-        <Avatar shape="square" size={64} src={albumImage} />
-      ),
-      width: 100
-    },
-    {
-      key: 'song',
-      title: '歌名',
-      dataIndex: 'song'
-    },
-    {
-      key: 'singer',
-      title: '歌手',
-      dataIndex: 'singer'
-    },
-    {
-      key: 'action',
-      title: '操作',
-      dataIndex: 'action',
-      render: () => <a>删除</a>
-    },
-  ]);
+  );
+
+  useEffect(() => {
+    getList()
+    .then((res) => {
+      if(!res) return;
+      res.data.forEach((data: any, idx: number) => 
+        res.data[idx].img = res.data[idx].img.replace(/^\S+server/, 'http://localhost:3009')
+      );
+      console.log(res);
+      setData(res.data)
+    });
+  }, []);
+
   return (
     <div className="main list-page">
       <TitleCmp title={title} action={{

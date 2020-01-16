@@ -20,10 +20,10 @@ export function upload({
   const worker = new PromiseWorker(w);
   const fl = new FileLoader(file);
   fl.upload(worker, (percent: number) => onProgress({ percent }))
-  .then(({success}) => {
+  .then(({success, location, token}) => {
     if(success){
       worker.terminate();
-      onSuccess();
+      onSuccess({location, token});
     } else {
       onError();
     }

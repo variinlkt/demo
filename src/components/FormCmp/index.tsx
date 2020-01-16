@@ -1,8 +1,6 @@
-import React, { useRef, useState, useMemo } from 'react';
-import { Typography, Divider, Form, Upload, Button, Input, Icon } from 'antd';
-import { Link } from 'react-router-dom';
-import TitleCmp from '../../components/TitleCmp/index';
-import FileLoader from '../../baseCmp/File';
+import React, { useState, useMemo, FormEvent } from 'react';
+import { Form, Upload, Button, Input, Icon } from 'antd';
+import { addSong } from "../../service";
 import {
   upload
 } from './uploadFunctions'
@@ -17,10 +15,11 @@ interface ILabelProps {
   disabled: boolean;
 }
 
-
 const FormCmp: React.FC<IFormPageProps> = ({
   form
 }) => {
+  const { getFieldDecorator, getFieldsValue } = form;
+
   const [song, setSong] = useState({
     key: 'song',
     name: '歌名',
@@ -53,16 +52,47 @@ const FormCmp: React.FC<IFormPageProps> = ({
   const [info, setInfo] = useState([
     song, singer
   ]);
+
   useMemo(() => {
     setInfo([song, singer]);
   }, [song, singer]);
-  
+
+  const formatFieldsValue = () => {
+    const { song, singer, img, file, lrc } = getFieldsValue()
+    const data = {
+      id: file.file.response.token,
+      song,
+      singer,
+      img: img.file.response.location,
+      file: file.file.response.location,
+      lrc: lrc.file.response.location
+    }
+    return data
+  }
+
+  const handleSubmit = async (e: FormEvent) => {
+    try{
+      e.preventDefault();
+      const fieldsValue = formatFieldsValue()
+      fieldsValue && addSong(fieldsValue);
+
+    } catch(e) {
+      console.error(e)
+    }
+  }
+
   return (
-    <Form>
+    <Form onSubmit={handleSubmit}>
       {
         !!info.length && info.map(({name, key}) => (
           <Form.Item label={name} className="form-item info-area" key={key}>
-            <Input name={name} />
+          {
+            getFieldDecorator(key, {
+              rules: [{ required: true, message: '必填项' }],
+            })(
+              <Input name={name} />
+            )
+          }
           </Form.Item>
 
         ))
@@ -70,11 +100,16 @@ const FormCmp: React.FC<IFormPageProps> = ({
       {
         !!data.length && data.map(({label, extra, key, accept}) => (
           <Form.Item label={label} extra={extra} className="form-item upload-area" key={key}>
-            <Upload customRequest={upload} accept={accept} >
-              <Button>
-                <Icon type="upload" /> Upload
-              </Button>
-            </Upload>
+          {getFieldDecorator(key, {
+            valuePropName: key,
+            rules: [{ required: true }],
+          })(
+              <Upload customRequest={upload} accept={accept} >
+                <Button>
+                  <Icon type="upload" /> Upload
+                </Button>
+              </Upload>
+          )}
           </Form.Item>
         ))
       }

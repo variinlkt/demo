@@ -1,14 +1,17 @@
-import { List } from '../config/db';
+import sequelize from '../config/db';
+const List = sequelize.import('../schema/list');
+
 export default async function addSong(ctx) {
   try{
-    const { id, song, singer, image, file, lyric } = ctx.request.body;
-    const r = await List.create({
+    const { id, song, singer, img, file, lrc } = ctx.request.body;
+
+    await List.create({
       id,
       song,
       singer,
-      image,
+      img,
       file,
-      lyric,
+      lrc,
     });
     return ctx.body = {
       success: true

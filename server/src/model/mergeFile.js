@@ -7,11 +7,14 @@ export default async function mergeFile(args, ctx) {
   let { chunksPath, idx } = args;
   const data = ctx.request.body;
   const { token, type, fileName, chunksCnt } = data;
+  console.log(ctx.request)
   if (type === 'merge'){ // 收到合并请求
     try{
       const suffix = fileName.match(/\.\w+/)[0];
       const nPath = getNewPath(uploadPath, suffix);
       mergeHandler({uploadPath: nPath, token, suffix, chunksPath, idx, chunksCnt})
+    console.log('ok')
+
       return ctx.body = {
         success: true,
         location: `${nPath}/${token}${suffix}`,
@@ -42,6 +45,8 @@ function merge({writeStream, chunksPath, idx, chunksCnt}, resolve, reject){
         chunksPath.delete(idx);
         return merge({writeStream, chunksPath, idx: ++idx, chunksCnt}, resolve, reject);
       } else {
+    console.log('resolve')
+
         resolve();
       }
     });
@@ -54,6 +59,7 @@ function merge({writeStream, chunksPath, idx, chunksCnt}, resolve, reject){
 
 async function mergeHandler({uploadPath, token, suffix, chunksPath, idx, chunksCnt}) {
   try{
+    console.log('handler')
     await fs.ensureDir(uploadPath);
     const writeFilePath = `${uploadPath}/${token}${suffix}`;
     const writeStream = fs.createWriteStream(writeFilePath);

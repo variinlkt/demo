@@ -1,45 +1,52 @@
-import React, { useState, CSSProperties } from 'react';
-import { Link } from "react-router-dom";
+import React, { CSSProperties } from 'react';
 import { Menu, Icon } from 'antd';
+import { useHistory } from "react-router-dom";
 import Profile from '../Profile/index';
+import { IClickParams, IControlTabProps } from './interface';
 import './index.scss';
 
 const { SubMenu } = Menu;
-interface IControlTabProps {
-}
 
-const ControlTab: React.FC<IControlTabProps> = ({
-}) => {
+const ControlTab: React.FC<IControlTabProps> = () => {
+  const history = useHistory()
   const MenuStyle: CSSProperties = {
     width: 256,
     height: '100%',
     position: 'absolute'
   };
-  const [menuList, setMenuList] = useState([{
-    title: '33',
-    key: 'list'
-  }])
+  const handleClick = (path: IClickParams) => {
+    history.push(path);
+  }
+
+  const menuList = [{
+    title: '所有歌曲',//redux
+    key: 'list',
+    pathname: '/',
+    onClick: handleClick
+  }];
+
   return (
     <Menu
-        style={MenuStyle}
-        mode="inline"
-      >
-        <Profile src={'avatar'} userName={'userName'} />
-        {
-          menuList.map(({title, key}) => (
-            <SubMenu
-              key={key}
-              title={
-                <Link to={`/${key === 'list' ? '' : key}`}>
-                  <Icon type="mail" />
-                  {title}
-                </Link>
-              }
-            >
-            </SubMenu>
-          ))
-        }
-      </Menu>
+      style={MenuStyle}
+      mode="inline"
+    >
+      <Profile src={'avatar'} userName={'userName'} />
+      {
+        menuList.map(({title, key, pathname}) => (
+          <SubMenu
+            key={key}
+            title={
+              <>
+                <Icon type="mail" />
+                {title}
+              </>
+            }
+            onTitleClick={handleClick.bind(null, {pathname})}
+          >
+          </SubMenu>
+        ))
+      }
+    </Menu>
   );
 };
 export default ControlTab;

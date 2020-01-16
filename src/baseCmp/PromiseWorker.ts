@@ -1,4 +1,4 @@
-import { encode, decode } from "../lib";
+import { decode } from "../lib";
 import { messageData } from '../interfaces/webWorker';
 
 export default class PromiseWorker {

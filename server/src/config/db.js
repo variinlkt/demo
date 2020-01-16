@@ -12,21 +12,15 @@ const sequelize = new Sequelize(database, username, password, {
     }
 });
 
-// table
-const List = sequelize.define('list', {
-  id: {
-      type: Sequelize.STRING(50),
-      primaryKey: true
-  },
-  song: Sequelize.STRING(20),
-  singer: Sequelize.STRING(20),
-  image: Sequelize.STRING(100),
-  file: Sequelize.STRING(100),
-  lyric: Sequelize.STRING(100),
-}, {
-  timestamps: false
+// test
+sequelize
+.authenticate()
+.then(() => {
+  console.log('Connection has been established successfully.');
+})
+.catch(err => {
+  console.error('Unable to connect to the database:', err);
 });
 
-export default{
-  List
-}
+
+export default sequelize;

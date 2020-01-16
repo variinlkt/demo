@@ -15,3 +15,12 @@ export interface IUploadFileParams {
   data: FormData;
   onUploadProgress?: Function;
 }
+
+export interface IFormSubmitParams {
+  id: string;
+  song: string;
+  singer: string;
+  img: string;
+  file: string;
+  lrc: string;
+}

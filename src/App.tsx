@@ -11,7 +11,7 @@ import ControlTab from './components/ControllTab/index';
 const App: React.FC<any> = (props) => {
   return (
     <>
-      <ControlTab></ControlTab>
+      <ControlTab/>
       <Switch>
         <Route exact path='/' component={ListPage} />
         <Route exact path='/addSong' component={FormPage} />
