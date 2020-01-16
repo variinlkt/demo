@@ -27,3 +27,6 @@ const List = sequelize.define('list', {
   timestamps: false
 });
 
+export default{
+  List
+}

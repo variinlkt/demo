@@ -1,7 +1,7 @@
 import path from 'path';
 import fs from 'fs-extra';
 
-export const uploadPath = path.join(__dirname, '../../upload/');
+let uploadPath = path.join(__dirname, '../../upload/');
 
 export default async function mergeFile(args, ctx) {
   let { chunksPath, idx } = args;
@@ -9,9 +9,12 @@ export default async function mergeFile(args, ctx) {
   const { token, type, fileName, chunksCnt } = data;
   if (type === 'merge'){ // 收到合并请求
     try{
-      mergeHandler({uploadPath, token, fileName, chunksPath, idx, chunksCnt})
+      const suffix = fileName.match(/\.\w+/)[0];
+      const nPath = getNewPath(uploadPath, suffix);
+      mergeHandler({uploadPath: nPath, token, suffix, chunksPath, idx, chunksCnt})
       return ctx.body = {
         success: true,
+        location: `${nPath}/${token}${suffix}`,
         type,
         token
       };
@@ -49,9 +52,35 @@ function merge({writeStream, chunksPath, idx, chunksCnt}, resolve, reject){
   });
 }
 
-export async function mergeHandler({uploadPath, token, fileName, chunksPath, idx, chunksCnt}) {
-  await fs.ensureDir(uploadPath);
-  const writeFilePath = `${uploadPath}/${token}${fileName.match(/\.\w+/)[0]}`;
-  const writeStream = fs.createWriteStream(writeFilePath);
-  await new Promise((resolve, reject) => merge({writeStream, chunksPath, idx, chunksCnt}, resolve, reject));
+async function mergeHandler({uploadPath, token, suffix, chunksPath, idx, chunksCnt}) {
+  try{
+    await fs.ensureDir(uploadPath);
+    const writeFilePath = `${uploadPath}/${token}${suffix}`;
+    const writeStream = fs.createWriteStream(writeFilePath);
+    await new Promise((resolve, reject) => merge({writeStream, chunksPath, idx, chunksCnt}, resolve, reject));
+  } catch(e) {
+    console.error(e)
+    return ctx.body = {
+      success: false,
+      type,
+      token
+    }
+  }
+}
+
+function getNewPath(path, suffix) {
+  switch(suffix){
+    case '.jpg':
+    case '.png':
+      return `${path}image`;
+    case '.mp3':
+      return `${path}file`;
+    case '.lrc':
+      return `${path}lyric`;
+  }
+}
+export {
+  uploadPath,
+  mergeHandler,
+  getNewPath
 }

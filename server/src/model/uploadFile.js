@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { mergeHandler, uploadPath } from './mergeFile';
+import { mergeHandler, uploadPath, getNewPath } from './mergeFile';
 
 export default async function uploadFile(args, ctx){
   let { chunksPath, idx } = args;
@@ -23,11 +23,14 @@ export default async function uploadFile(args, ctx){
         token
       }
     } else { // 只有一个chunk
-      mergeHandler({uploadPath, token, fileName, chunksPath, idx, chunksCnt});
+      const suffix = fileName.match(/\.\w+/)[0];
+      const nPath = getNewPath(uploadPath, suffix);
+      mergeHandler({uploadPath: nPath, token, suffix, chunksPath, idx, chunksCnt});
       return ctx.body = {
         success: true,
         type: 'merge',
-        token
+        token,
+        location: `${nPath}/${token}${suffix}`
       };
     }
   }catch(e) {

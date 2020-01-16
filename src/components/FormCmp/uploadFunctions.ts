@@ -4,7 +4,7 @@ import Worker from 'worker-loader!../../webWorker/index.worker';
 import PromiseWorker from "../../baseCmp/PromiseWorker";
 
 
-function uploadImage({
+export function upload({
   onProgress,
   onError,
   onSuccess,
@@ -28,18 +28,4 @@ function uploadImage({
       onError();
     }
   });
-}
-
-function uploadFiles() {
-
-}
-
-function uploadLyric() {
-
-}
-
-export {
-  uploadImage,
-  uploadFiles,
-  uploadLyric
 }
