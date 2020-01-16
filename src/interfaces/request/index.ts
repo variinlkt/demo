@@ -24,3 +24,7 @@ export interface IFormSubmitParams {
   file: string;
   lrc: string;
 }
+
+export interface IDeleteSongParams {
+  id: string;
+}

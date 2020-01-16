@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Avatar } from 'antd';
 import TitleCmp from '../../components/TitleCmp/index';
-import { getList } from 'src/service';
+import { getList, deleteSong } from 'src/service';
 import './index.scss';
 
 
@@ -17,34 +17,6 @@ interface IItemProps{
   value: string
 }
 
-const tableHead = [
-  {
-    key: 'img',
-    title: '',
-    dataIndex: 'img',
-    render: (img: string) => (
-      <Avatar shape="square" size={64} src={img} />
-    ),
-    width: 100
-  },
-  {
-    key: 'song',
-    title: '歌名',
-    dataIndex: 'song'
-  },
-  {
-    key: 'singer',
-    title: '歌手',
-    dataIndex: 'singer'
-  },
-  {
-    key: 'action',
-    title: '操作',
-    dataIndex: 'action',
-    render: () => <a href="javascript:void(0);">删除</a>
-  },
-];
-
 const ListPage: React.FC<IListPageProps> = () => {
   const title = '歌库';//redux
   const [data, setData] = useState(
@@ -57,7 +29,37 @@ const ListPage: React.FC<IListPageProps> = () => {
       },
     ]
   );
-
+  const handleDelete = (idx: number) => {
+    const id = data[idx] && data[idx].id;
+    deleteSong({id});
+  }
+  const tableHead = [
+    {
+      key: 'img',
+      title: '',
+      dataIndex: 'img',
+      render: (img: string) => (
+        <Avatar shape="square" size={64} src={img} />
+      ),
+      width: 100
+    },
+    {
+      key: 'song',
+      title: '歌名',
+      dataIndex: 'song'
+    },
+    {
+      key: 'singer',
+      title: '歌手',
+      dataIndex: 'singer'
+    },
+    {
+      key: 'action',
+      title: '操作',
+      dataIndex: 'action',
+      render: (text: string, record: string, index: number) => <a onClick={handleDelete.bind(null, index)}>删除</a>
+    },
+  ];
   useEffect(() => {
     getList()
     .then((res) => {

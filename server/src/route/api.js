@@ -6,7 +6,8 @@ import {
   handleSignin,
   handleSignup,
   getList,
-  addSong
+  addSong,
+  deleteSong
  } from '../model'
 import koaBody from 'koa-body';
 
@@ -35,9 +36,12 @@ router.post('/signin', koaBody(), handleSignin);
 router.post('/signup', koaBody(), handleSignup);
 
 // 获取列表
-router.get('/list', getList);
+router.get('/songs', getList);
 
 // 添加
 router.post('/addSong', koaBody(), addSong);
+
+// 删除
+router.delete('/songs/:id', deleteSong);
 
 export default router;

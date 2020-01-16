@@ -5,6 +5,7 @@ import handleSignin from './handleSignin';
 import handleSignup from './handleSignup';
 import getList from './getList';
 import addSong from './addSong';
+import deleteSong from './deleteSong';
 
 
 export {
@@ -14,5 +15,6 @@ export {
   handleSignin,
   handleSignup,
   getList,
-  addSong
+  addSong,
+  deleteSong
 }

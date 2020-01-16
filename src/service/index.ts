@@ -1,4 +1,4 @@
-import { IUploadFileDataParams, IProgressEventParams, IFormSubmitParams } from '../interfaces/request';
+import { IUploadFileDataParams, IProgressEventParams, IFormSubmitParams, IDeleteSongParams } from '../interfaces/request';
 import axios from 'axios';
 
 // 文件上传
@@ -24,19 +24,28 @@ export function addSong(params: IFormSubmitParams) {
 }
 // 获取列表
 export function getList() {
-  return fetchFn('list', null, {
+  return fetchFn('songs', null, {
     method: 'get'
   });
+}
+
+export function deleteSong(params: IDeleteSongParams) {
+  return fetchFn('songs', params, {
+    method: 'delete'
+  })
 }
 
 // 公用函数
 async function fetchFn(url: string, params?: any, config?: any) {
   const method = config && config.method || 'post';
+  const path = 'http://localhost:3008/api/' + url;
   let ret;
-  if(method == 'post')
-    ret = await axios.post('http://localhost:3008/api/' + url, params, config);
+  if (method === 'post')
+    ret = await axios.post(path, params, config);
+  else if (method === 'delete')
+    ret = await axios.delete(path + '/' + params.id, config);
   else
-    ret = await axios.get('http://localhost:3008/api/' + url, config);
+    ret = await axios.get(path, config);
   const { data } = ret;
   return data;
 }
