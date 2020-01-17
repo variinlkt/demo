@@ -11,6 +11,8 @@ const Profile: React.FC<IProfileProps> = ({
   src,
   userName,
 }) => {
+  console.log('Profile render')
+
   return (
     <div className="profile">
       <Avatar shape="circle" size={64} icon="user" className="avatar"/>

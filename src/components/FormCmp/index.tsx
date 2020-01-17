@@ -56,6 +56,7 @@ const FormCmp: React.FC<IFormPageProps> = ({
   ]);
 
   useMemo(() => {
+    console.log('formcmp usememo')
     setInfo([song, singer]);
   }, [song, singer]);
 
@@ -84,6 +85,7 @@ const FormCmp: React.FC<IFormPageProps> = ({
       console.error(e)
     }
   }
+  console.log('formcmp render')
 
   return (
     <Form onSubmit={handleSubmit}>

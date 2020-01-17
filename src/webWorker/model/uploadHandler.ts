@@ -7,7 +7,6 @@ import { uploadFile, mergeFile } from "../../service";
 export default async function uploadHandler(data: data){
   try{ 
     const { chunks, token, fileName, type, id } = data
-    console.log(data)
     const chunksArr = chunks.map((chunk: Blob, i: number) => {
       return {
         chunk, 
@@ -17,7 +16,6 @@ export default async function uploadHandler(data: data){
         chunksCnt: chunks.length,
       };
     })
-    console.log(chunksArr)
     // 请求并发控制
     const r = await concurrency(chunksArr, 4, (item: IUploadFileDataParams) => 
       uploadFile(
@@ -44,7 +42,6 @@ export default async function uploadHandler(data: data){
         chunksCnt: chunks.length,
         fileName
       }));
-      console.log(ret)
       return ret
     } else {
       return Array.isArray(r) && r[0] || r;

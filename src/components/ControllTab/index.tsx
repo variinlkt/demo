@@ -17,9 +17,10 @@ const ControlTab: React.FC<IControlTabProps> = () => {
 
   const handleClick = useCallback(
     (path: IClickParams) => {
+      console.log('controltab usecallback')
       history.push(path)
     },
-    [],
+    [history],
   );
 
   const menuList = [{
@@ -28,6 +29,7 @@ const ControlTab: React.FC<IControlTabProps> = () => {
     pathname: '/',
     onClick: handleClick
   }];
+  console.log('controltab render')
 
   return (
     <Menu

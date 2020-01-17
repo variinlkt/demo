@@ -8,9 +8,9 @@ interface IFormPageProps {
 
 const FormPage: React.FC<IFormPageProps> = () => {
   const title = '添加歌曲';
+  console.log('formpage render')
   return (
-    <div className="main form-page">
-      <TitleCmp title={title}></TitleCmp>
+    <div className="form-page">
       <WrappedAdvancedForm />
     </div>
   );

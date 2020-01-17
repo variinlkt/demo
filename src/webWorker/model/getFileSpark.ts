@@ -5,7 +5,6 @@ interface IFileList {
 }
 
 export default function getFileSpark({ fileList }: IFileList){ 
-  console.log(fileList)
   return new Promise((resolve) => {
     const reader = new FileReader();
     let count = 0;

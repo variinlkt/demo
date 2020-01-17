@@ -21,9 +21,7 @@ export function register(): WorkerInstance {
     }
 
     const { type, id, msg } = data;
-    console.log(data, mapping)
     const result = (await mapping.get(type)!({...msg, type, id}));
-    console.log('ready to post back')
     post({ id, type, msg: result });
   };
 
@@ -38,11 +36,6 @@ export function concurrency(jobList: any[], limit = 4, handler: Function){
   const fn = (arr: any[]) => {
     const job = arr.shift();
     return handler(job).then((res: any) => {
-      // const { success, index, token } = res;
-      // console.log(success)
-      // if(!success) {// 上传文件块失败，重传
-      //   arr.push(job);
-      // }
       if(arr.length) 
         return fn(arr);
       else 

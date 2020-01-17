@@ -18,7 +18,6 @@ export default class PromiseWorker {
       const { id, msg, type }  = msgData,
           ret = this.msgHandlerBank.get(type),
           handler = ret![id];
-      console.log(msgData,ret,handler)
       if (handler && typeof handler === 'function') {
         if (type !== 'PROGRESS' || (type === 'PROGRESS' && msg && msg.percent === 1)){
           handler(msg);

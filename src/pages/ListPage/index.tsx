@@ -1,24 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Avatar } from 'antd';
-import TitleCmp from '../../components/TitleCmp/index';
 import { getList, deleteSong } from 'src/service';
 import './index.scss';
+import { useSelector, useDispatch } from 'react-redux';
+import { ChangeHeaderAction } from '../../redux/Actions/index';
 
 
 const { Column } = Table;
 interface IListPageProps {
-  avatar: string;
-  userName: string;
-  controlList: IItemProps[];
 }
-
-interface IItemProps{
-  title: string,
-  value: string
-}
-
-const ListPage: React.FC<IListPageProps> = () => {
-  const title = '歌库';//redux
+const ListPage: React.FC<IListPageProps> = ({
+}) => {
+  const dispatch = useDispatch();
   const [data, setData] = useState(
     [
       {
@@ -45,9 +38,17 @@ const ListPage: React.FC<IListPageProps> = () => {
     if(res && res.success){
       let copy = [ ...data ];
       copy.splice(idx, 1);
-      console.log(copy)
       setData(copy)
     }
+  }
+  const changeTitle = () => {
+    dispatch(ChangeHeaderAction({
+      title: '歌库',
+      action: {
+        title: '添加歌曲',
+        url: '/addSong'
+      }
+    }));
   }
   const tableHead = [
     {
@@ -77,6 +78,8 @@ const ListPage: React.FC<IListPageProps> = () => {
     },
   ];
   useEffect(() => {
+    console.log('listpage useeffect')
+    changeTitle();
     getList()
     .then((res) => {
       if(!res) return;
@@ -87,13 +90,9 @@ const ListPage: React.FC<IListPageProps> = () => {
       setData(res.data)
     });
   }, []);
-
+  console.log('listpage render')
   return (
-    <div className="main list-page">
-      <TitleCmp title={title} action={{
-        title: '添加歌曲',
-        url: '/addSong'
-      }}></TitleCmp>
+    <div className="list-page">
       <Table dataSource={data} rowKey="id">
       {
         !!tableHead.length && tableHead.map(({key, title, dataIndex, render, width}) => (
