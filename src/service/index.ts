@@ -30,9 +30,7 @@ export function getList() {
 }
 
 export function deleteSong(params: IDeleteSongParams) {
-  return fetchFn('songs', params, {
-    method: 'delete'
-  })
+  return fetchFn(`deleteSong`, params )
 }
 
 // 公用函数
@@ -43,7 +41,7 @@ async function fetchFn(url: string, params?: any, config?: any) {
   if (method === 'post')
     ret = await axios.post(path, params, config);
   else if (method === 'delete')
-    ret = await axios.delete(path + '/' + params.id, config);
+    ret = await axios.delete(path, config);
   else
     ret = await axios.get(path, config);
   const { data } = ret;

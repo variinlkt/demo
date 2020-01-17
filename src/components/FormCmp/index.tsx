@@ -1,5 +1,6 @@
 import React, { useState, useMemo, FormEvent } from 'react';
 import { Form, Upload, Button, Input, Icon } from 'antd';
+import { useHistory } from 'react-router';
 import { addSong } from "../../service";
 import {
   upload
@@ -18,6 +19,7 @@ interface ILabelProps {
 const FormCmp: React.FC<IFormPageProps> = ({
   form
 }) => {
+  const history = useHistory();
   const { getFieldDecorator, getFieldsValue } = form;
 
   const [song, setSong] = useState({
@@ -74,8 +76,10 @@ const FormCmp: React.FC<IFormPageProps> = ({
     try{
       e.preventDefault();
       const fieldsValue = formatFieldsValue()
-      fieldsValue && addSong(fieldsValue);
-
+      const res = await addSong(fieldsValue);
+      if(res && res.success){
+        history.push('/')
+      }
     } catch(e) {
       console.error(e)
     }

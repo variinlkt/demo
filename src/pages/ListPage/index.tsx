@@ -23,23 +23,39 @@ const ListPage: React.FC<IListPageProps> = () => {
     [
       {
         id: '1',
-        img: 'https://avatars3.githubusercontent.com/u/7843281?s=40&v=4',
-        song: 'Brown',
-        singer: '32',
+        image: '',
+        song: '',
+        singer: '',
+        lrc: '',
+        file: '',
+        img: ''
       },
     ]
   );
-  const handleDelete = (idx: number) => {
-    const id = data[idx] && data[idx].id;
-    deleteSong({id});
+  const handleDelete = async (idx: number) => {
+    const item = data[idx]
+    const id = item && item.id;
+
+    const res = await deleteSong({
+      id,
+      file: item.file,
+      lrc: item.lrc,
+      img: item.img
+    });
+    if(res && res.success){
+      let copy = [ ...data ];
+      copy.splice(idx, 1);
+      console.log(copy)
+      setData(copy)
+    }
   }
   const tableHead = [
     {
-      key: 'img',
+      key: 'image',
       title: '',
-      dataIndex: 'img',
-      render: (img: string) => (
-        <Avatar shape="square" size={64} src={img} />
+      dataIndex: 'image',
+      render: (image: string) => (
+        <Avatar shape="square" size={64} src={image} />
       ),
       width: 100
     },
@@ -65,7 +81,7 @@ const ListPage: React.FC<IListPageProps> = () => {
     .then((res) => {
       if(!res) return;
       res.data.forEach((data: any, idx: number) => 
-        res.data[idx].img = res.data[idx].img.replace(/^\S+server/, 'http://localhost:3009')
+        res.data[idx].image = res.data[idx].img.replace(/^\S+server/, 'http://localhost:3009')
       );
       console.log(res);
       setData(res.data)
@@ -78,7 +94,7 @@ const ListPage: React.FC<IListPageProps> = () => {
         title: '添加歌曲',
         url: '/addSong'
       }}></TitleCmp>
-      <Table dataSource={data}>
+      <Table dataSource={data} rowKey="id">
       {
         !!tableHead.length && tableHead.map(({key, title, dataIndex, render, width}) => (
           <Column width={width} title={title} dataIndex={dataIndex} key={key} render={render} />

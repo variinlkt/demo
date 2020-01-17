@@ -13,7 +13,6 @@ export default async function mergeFile(args, ctx) {
       const suffix = fileName.match(/\.\w+/)[0];
       const nPath = getNewPath(uploadPath, suffix);
       mergeHandler({uploadPath: nPath, token, suffix, chunksPath, idx, chunksCnt})
-    console.log('ok')
 
       return ctx.body = {
         success: true,
@@ -32,21 +31,22 @@ export default async function mergeFile(args, ctx) {
   }
 }
 
-function merge({writeStream, chunksPath, idx, chunksCnt}, resolve, reject){
-  const readStream = fs.createReadStream(chunksPath.get(idx));
+function merge({writeStream, chunksPath, idx, chunksCnt, token}, resolve, reject){
+  const readStream = fs.createReadStream(chunksPath.get(token)[idx]);
   readStream.pipe(writeStream, { end: false }); // 写入数据
   readStream.on("end", () => {
-    fs.unlink(chunksPath.get(idx), err => {
+    fs.unlink(chunksPath.get(token)[idx], err => {
       if (err) {
         reject(err)
       }
       readStream.unpipe(writeStream);
       if(idx < chunksCnt - 1){
-        chunksPath.delete(idx);
-        return merge({writeStream, chunksPath, idx: ++idx, chunksCnt}, resolve, reject);
+        let arr = chunksPath.get(token);
+        arr[idx] = null;
+        chunksPath.set(token, arr);
+        return merge({writeStream, chunksPath, idx: ++idx, chunksCnt, token}, resolve, reject);
       } else {
-    console.log('resolve')
-
+        chunksPath.delete(token);
         resolve();
       }
     });
@@ -59,11 +59,10 @@ function merge({writeStream, chunksPath, idx, chunksCnt}, resolve, reject){
 
 async function mergeHandler({uploadPath, token, suffix, chunksPath, idx, chunksCnt}) {
   try{
-    console.log('handler')
     await fs.ensureDir(uploadPath);
     const writeFilePath = `${uploadPath}/${token}${suffix}`;
     const writeStream = fs.createWriteStream(writeFilePath);
-    await new Promise((resolve, reject) => merge({writeStream, chunksPath, idx, chunksCnt}, resolve, reject));
+    await new Promise((resolve, reject) => merge({writeStream, chunksPath, idx, chunksCnt, token}, resolve, reject));
   } catch(e) {
     console.error(e)
     return ctx.body = {

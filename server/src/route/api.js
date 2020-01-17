@@ -42,6 +42,6 @@ router.get('/songs', getList);
 router.post('/addSong', koaBody(), addSong);
 
 // 删除
-router.delete('/songs/:id', deleteSong);
+router.post('/deleteSong', koaBody(), deleteSong);
 
 export default router;

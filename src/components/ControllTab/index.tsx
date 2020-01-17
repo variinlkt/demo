@@ -1,4 +1,4 @@
-import React, { CSSProperties } from 'react';
+import React, { CSSProperties, useCallback } from 'react';
 import { Menu, Icon } from 'antd';
 import { useHistory } from "react-router-dom";
 import Profile from '../Profile/index';
@@ -14,9 +14,13 @@ const ControlTab: React.FC<IControlTabProps> = () => {
     height: '100%',
     position: 'absolute'
   };
-  const handleClick = (path: IClickParams) => {
-    history.push(path);
-  }
+
+  const handleClick = useCallback(
+    (path: IClickParams) => {
+      history.push(path)
+    },
+    [],
+  );
 
   const menuList = [{
     title: '所有歌曲',//redux

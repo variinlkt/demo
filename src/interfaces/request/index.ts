@@ -27,4 +27,7 @@ export interface IFormSubmitParams {
 
 export interface IDeleteSongParams {
   id: string;
+  img: string;
+  lrc: string;
+  file: string;
 }

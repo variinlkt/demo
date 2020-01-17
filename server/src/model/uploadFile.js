@@ -14,8 +14,17 @@ export default async function uploadFile(args, ctx){
     nextPath = `${path.slice(0, path.lastIndexOf('/') + 1)}${token}-${index}`;
     fs.renameSync(path, nextPath);
     // 保存目录
-    chunksPath.set(+index, nextPath);
-    console.log(+chunksCnt)
+    const fileArr = chunksPath.get(token)
+    if(!fileArr){
+      let arr = new Array(chunksCnt);
+      arr[+index] = nextPath;
+      chunksPath.set(token, arr);
+    } else {
+      fileArr[+index] = nextPath;
+      chunksPath.set(token, fileArr);
+    }
+    console.log(+chunksCnt, chunksPath)
+
     if (+chunksCnt > 1) {
       return ctx.body = {
         success: true,
